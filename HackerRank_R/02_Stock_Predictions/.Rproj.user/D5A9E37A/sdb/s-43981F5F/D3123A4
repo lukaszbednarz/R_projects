@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "### This is a file containing main data feed and control functions\n\n---\ntitle: \"Controller\"\nauthor: \"Lukasz Bednarz\"\ndate: \"24 March 2016\"\noutput: html_document\n---\n\n```{r Load Data, include=FALSE}\nknitr::opts_chunk$set(echo = TRUE)\n\nsetwd(\"~/Lukasz/Learning/HackerRank_R/02_Stock_Predictions\")\nsource(\"stockPredictionsFunctions.r\")\nsource(\"printTransactions.r\")\n\nfileName=\"all_data.txt\"\n\nk <- 10\n\nstox.df <- getHistData(fileName, k)\n\nN <- nrow(stox.df)\n```\n\n```{r Create Portfolio}\n#\t1. printTransactions  \t\t\ttakes a float m money left, an integer k number of stocks, \n#                             an integer d days left, a string array name of stock names, \n#                             an integer array owned of stocks owned, and an 2d integer \n#                             array prices of stock prices containing k arrays of length 5 \n#                             and print your output.\nfile.remove(\"pos_hist.csv\")\nfile.remove(\"hist_prices.csv\")\n\nportfolio<-list(\"m\" = 100,\n                \"k\" = k,\n                \"d\" = 500,\n                \"name\" = names(stox.df),\n                \"owned\" = array(data=0, dim=k),\n                \"prices\" = matrix(t(stox.df[1:5,]),nrow = k, ncol = 5)\n                )\npos.df<-data.frame(t(c(portfolio$owned,portfolio$owned, 0, portfolio$m)))\npos.names<-mapply(function(x){paste0(x,\"_pos\", collapse = \"\")}, portfolio$name)\nnames(pos.df)<-c(portfolio$name,pos.names, \"net_value\", \"cash\")\n\nwrite.csv(pos.df, file = \"pos_hist.csv\")\n\nplot(main= \"positions\")\nlegend(0,0.5)\n\nfor (ii in 5:nrow(stox.df)) {\n  \n  writeLines(as.character(ii))\n  \n  # update new prices\n  portfolio$prices<-matrix(t(stox.df[(ii-4):ii,]),nrow = k, ncol = 5)\n  prices.curr <- stox.df[ii,]\n  \n  # send to model\n  trans <- printTransactions(portfolio$m,\n                               portfolio$k,\n                               portfolio$d,\n                               portfolio$name,\n                               portfolio$owned,\n                               portfolio$prices)\n  \n  # process output and update the portfolio\n  portfolio.new <- executeTrans(portfolio, trans)\n  \n  net.value <- portfolio.new$owned*prices.curr\n  net.value.total <- sum(net.value)\n  \n  \n  writeLines(as.character(net.value))\n  print(portfolio.new$owned)\n  \n  \n  pos.df <- rbind(pos.df, as.numeric(t(c(portfolio.new$owned, net.value, net.value.total,portfolio.new$m))))\n  write.csv(pos.df, file = \"pos_hist.csv\")\n  \n  portfolio <- portfolio.new\n\n}\n\n\n```",
+    "created" : 1458864808825.000,
+    "dirty" : true,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3418787670",
+    "id" : "D3123A4",
+    "lastKnownWriteTime" : 1458959376,
+    "last_content_update" : 1458960068763,
+    "path" : "~/Lukasz/Learning/HackerRank_R/02_Stock_Predictions/Controller.rmd",
+    "project_path" : "Controller.rmd",
+    "properties" : {
+    },
+    "relative_order" : 9,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

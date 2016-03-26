@@ -1,0 +1,51 @@
+{
+    "debugBreakpointsState" : {
+        "breakpoints" : [
+            {
+                "editor_line_number" : 103,
+                "editor_state" : 2,
+                "function_name" : "efficient.portfolio",
+                "function_steps" : "",
+                "id" : 1,
+                "is_package_breakpoint" : false,
+                "is_pending_debug_completion" : false,
+                "line_number" : 103,
+                "needs_updated_steps" : false,
+                "package_name" : "",
+                "path" : "~/Intro_to_Computational_Finance/Week8/R_Assignment/portfolio.R",
+                "state" : 2,
+                "type" : 0
+            },
+            {
+                "editor_line_number" : 56,
+                "editor_state" : 1,
+                "function_name" : "executeTrans",
+                "function_steps" : "4",
+                "id" : 33,
+                "is_package_breakpoint" : false,
+                "is_pending_debug_completion" : false,
+                "line_number" : 56,
+                "needs_updated_steps" : true,
+                "package_name" : "",
+                "path" : "~/Lukasz/Learning/HackerRank_R/02_Stock_Predictions/stockPredictionsFunctions.r",
+                "state" : 1,
+                "type" : 0
+            },
+            {
+                "editor_line_number" : 50,
+                "editor_state" : 1,
+                "function_name" : "executeTrans",
+                "function_steps" : "2",
+                "id" : 36,
+                "is_package_breakpoint" : false,
+                "is_pending_debug_completion" : false,
+                "line_number" : 50,
+                "needs_updated_steps" : false,
+                "package_name" : "",
+                "path" : "~/Lukasz/Learning/HackerRank_R/02_Stock_Predictions/stockPredictionsFunctions.r",
+                "state" : 1,
+                "type" : 0
+            }
+        ]
+    }
+}

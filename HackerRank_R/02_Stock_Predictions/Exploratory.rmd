@@ -1,0 +1,93 @@
+---
+title: "Exporatory"
+author: "Lukasz Bednarz"
+date: "24 March 2016"
+output: html_document
+---
+
+```{r Load Data, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+setwd("~/Lukasz/Learning/HackerRank_R/02_Stock_Predictions")
+source("stockPredictionsFunctions.r")
+
+fileName="all_data.txt"
+
+stox.df <- getHistData(fileName, 10)
+stox.df.logd <- log(stox.df[2:nrow(stox.df),]) - log(stox.df[1:nrow(stox.df)-1,])
+
+
+```
+
+### Run Program
+
+
+```{r Run transactions }
+
+for (name in names(stox.df)) {
+  
+  plot(as.matrix(stox.df[name]), main=name, type='b')
+  
+}
+
+
+
+```
+
+### Stox plots log
+
+
+```{r Stox Plots Log scale difference}
+par(mfrow=c(1,1))
+
+for (name in names(stox.df)) {
+  
+  plot(as.matrix(stox.df.logd[name]), main=name, type='b')
+  
+}
+
+
+```
+### Calculate covariance matrix
+
+```{r Stox Covariance }
+
+stox.ret<-t(as.matrix(stox.df.logd))%*%matrix(data =1/(N_days-1), ncol=1, nrow=N_days-1)
+
+target.ret = mean(stox.ret)
+
+stox.df.logd.demeaned<-(stox.df.logd - matrix(data=1,nrow=N_days-1,ncol=1)%*%t(stox.ret))
+
+stox.cov<-as.matrix(t(stox.df.logd.demeaned))%*%as.matrix(stox.df.logd.demeaned)/(N_days-2)
+
+stox.std<-sqrt(diag(stox.cov))
+
+stox.corr<-diag(stox.std^-1)%*%stox.cov%*%diag(stox.std^-1)
+
+```
+
+
+ 
+ 
+### Calculate optimal portfolio 
+ 
+```{r Stox Portfolio, cache=FALSE,echo=FALSE }
+library(quadprog)
+# As there is no shorts
+# this is QP problem: min(-d' b + 1/2 b' D b) with the constraints A' b >= b_0.
+# in our case A consist of rules: weights'*returns = alpha_0 weights > = zeros(mx1)
+# weights'*ones(mx1) = 1
+# solve.QP(Dmat, dvec, Amat, bvec, meq=0, factorized=FALSE)
+ 
+Dmat <- 2*stox.cov
+bvec <- c(1,target.ret, rep(0, N_stock))
+Amat <- cbind(rep(1, N_stock),stox.ret,diag(N_stock))
+dvec <- rep.int(0, N_stock)
+
+result <- solve.QP(Dmat=Dmat,dvec=dvec,Amat=Amat,bvec=bvec,meq=2)
+    w <- round(result$solution, 6)
+
+ w   
+ ```
+ 
+

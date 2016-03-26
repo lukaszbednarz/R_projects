@@ -1,0 +1,7 @@
+{
+    "installOptions" : {
+        "installDependencies" : true,
+        "installFromRepository" : true,
+        "libraryPath" : "E:/Users/Lukasz/Documents/R/R-3.2.3/library"
+    }
+}

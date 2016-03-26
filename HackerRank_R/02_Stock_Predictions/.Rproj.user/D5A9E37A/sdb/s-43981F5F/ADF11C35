@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "---\ntitle: \"Exporatory\"\nauthor: \"Lukasz Bednarz\"\ndate: \"24 March 2016\"\noutput: html_document\n---\n\n```{r Load Data, include=FALSE}\nknitr::opts_chunk$set(echo = TRUE)\n\nsetwd(\"~/Lukasz/Learning/HackerRank_R/02_Stock_Predictions\")\nsource(\"stockPredictionsFunctions.r\")\n\nfileName=\"all_data.txt\"\n\nstox.df <- getHistData(fileName, 10)\nstox.df.logd <- log(stox.df[2:nrow(stox.df),]) - log(stox.df[1:nrow(stox.df)-1,])\n\n\n```\n\n### Run Program\n\n\n```{r Run transactions }\n\nfor (name in names(stox.df)) {\n  \n  plot(as.matrix(stox.df[name]), main=name, type='b')\n  \n}\n\n\n\n```\n\n### Stox plots log\n\n\n```{r Stox Plots Log scale difference}\npar(mfrow=c(1,1))\n\nfor (name in names(stox.df)) {\n  \n  plot(as.matrix(stox.df.logd[name]), main=name, type='b')\n  \n}\n\n\n```\n### Calculate covariance matrix\n\n```{r Stox Covariance }\n\nstox.ret<-t(as.matrix(stox.df.logd))%*%matrix(data =1/(N_days-1), ncol=1, nrow=N_days-1)\n\ntarget.ret = mean(stox.ret)\n\nstox.df.logd.demeaned<-(stox.df.logd - matrix(data=1,nrow=N_days-1,ncol=1)%*%t(stox.ret))\n\nstox.cov<-as.matrix(t(stox.df.logd.demeaned))%*%as.matrix(stox.df.logd.demeaned)/(N_days-2)\n\nstox.std<-sqrt(diag(stox.cov))\n\nstox.corr<-diag(stox.std^-1)%*%stox.cov%*%diag(stox.std^-1)\n\n```\n\n\n \n \n### Calculate optimal portfolio \n \n```{r Stox Portfolio, cache=FALSE,echo=FALSE }\nlibrary(quadprog)\n# As there is no shorts\n# this is QP problem: min(-d' b + 1/2 b' D b) with the constraints A' b >= b_0.\n# in our case A consist of rules: weights'*returns = alpha_0 weights > = zeros(mx1)\n# weights'*ones(mx1) = 1\n# solve.QP(Dmat, dvec, Amat, bvec, meq=0, factorized=FALSE)\n \nDmat <- 2*stox.cov\nbvec <- c(1,target.ret, rep(0, N_stock))\nAmat <- cbind(rep(1, N_stock),stox.ret,diag(N_stock))\ndvec <- rep.int(0, N_stock)\n\nresult <- solve.QP(Dmat=Dmat,dvec=dvec,Amat=Amat,bvec=bvec,meq=2)\n    w <- round(result$solution, 6)\n\n w   \n ```\n \n\n",
+    "created" : 1458836889940.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1566201014",
+    "id" : "ADF11C35",
+    "lastKnownWriteTime" : 1458870001,
+    "last_content_update" : 1458870001583,
+    "path" : "~/Lukasz/Learning/HackerRank_R/02_Stock_Predictions/Exploratory.rmd",
+    "project_path" : "Exploratory.rmd",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}
