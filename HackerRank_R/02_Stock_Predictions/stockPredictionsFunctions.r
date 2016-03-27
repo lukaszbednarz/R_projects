@@ -49,31 +49,28 @@ function( portf, trans) {
   
   inp.lines<-strsplit(trans,"\\n",perl = TRUE)[[1]]
   N_trans<-as.numeric(inp.lines[1])
+  # update days
   portf$d <- portf$d -1
   
   # read data from transaction and update m
-  
-  for (ii in 2:(N_trans+1)) {
-    elements<-strsplit(inp.lines[ii],"\\s",perl = TRUE)[[1]]
-    tick<-elements[1]
-    cmd<-elements[2]
-    val<-as.numeric(elements[3])
-    idx<-match(tick, portf$name)
-    
-    if (cmd == "BUY"){
-      portf$owned[idx] <- portf$owned[idx] + val
-      portf$m <- portf$m - val*portf$price[idx,ncol(portf$price)]
+  if (N_trans > 0) {
+    for (ii in 2:(N_trans+1)) {
+      elements<-strsplit(inp.lines[ii],"\\s",perl = TRUE)[[1]]
+      tick<-elements[1]
+      cmd<-elements[2]
+      val<-as.numeric(elements[3])
+      idx<-match(tick, portf$name)
+      
+      if (cmd == "BUY"){
+        portf$owned[idx] <- portf$owned[idx] + val
+        portf$m <- portf$m - val*portf$price[idx,ncol(portf$price)]
+      }
+      else {
+        portf$owned[idx] <- portf$owned[idx] - val
+        portf$m <- portf$m + val*portf$price[idx,ncol(portf$price)]
+      }
     }
-    else {
-      portf$owned[idx] <- portf$owned[idx] - val
-      portf$m <- portf$m + val*portf$price[idx,ncol(portf$price)]
-    }
-    
-   # update days
-    
-    
-    
-  }
+  } # end if (N_trans > 0)
   
   portf
 }

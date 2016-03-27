@@ -45,6 +45,36 @@
                 "path" : "~/Lukasz/Learning/HackerRank_R/02_Stock_Predictions/stockPredictionsFunctions.r",
                 "state" : 1,
                 "type" : 0
+            },
+            {
+                "editor_line_number" : 157,
+                "editor_state" : 1,
+                "function_name" : "efficientPortfolio",
+                "function_steps" : "18,4,5",
+                "id" : 37,
+                "is_package_breakpoint" : false,
+                "is_pending_debug_completion" : true,
+                "line_number" : 157,
+                "needs_updated_steps" : false,
+                "package_name" : "",
+                "path" : "~/Lukasz/Learning/HackerRank_R/02_Stock_Predictions/printTransactions.r",
+                "state" : 1,
+                "type" : 0
+            },
+            {
+                "editor_line_number" : 16,
+                "editor_state" : 1,
+                "function_name" : "printTransactions",
+                "function_steps" : "2",
+                "id" : 39,
+                "is_package_breakpoint" : false,
+                "is_pending_debug_completion" : false,
+                "line_number" : 16,
+                "needs_updated_steps" : false,
+                "package_name" : "",
+                "path" : "~/Lukasz/Learning/HackerRank_R/02_Stock_Predictions/printTransactions.r",
+                "state" : 1,
+                "type" : 0
             }
         ]
     }

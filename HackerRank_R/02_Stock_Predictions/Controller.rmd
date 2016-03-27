@@ -7,7 +7,7 @@ date: "24 March 2016"
 output: html_document
 ---
 
-```{r Load Data, include=FALSE}
+```{r Load_Data, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
 setwd("~/Lukasz/Learning/HackerRank_R/02_Stock_Predictions")
@@ -20,10 +20,10 @@ k <- 10
 
 stox.df <- getHistData(fileName, k)
 
-N <- nrows(stox.df)
+N <- nrow(stox.df)
 ```
 
-```{r Create Portfolio}
+```{r Create_Portfolio, dependson=Load_Data }
 #	1. printTransactions  			takes a float m money left, an integer k number of stocks, 
 #                             an integer d days left, a string array name of stock names, 
 #                             an integer array owned of stocks owned, and an 2d integer 
@@ -43,10 +43,10 @@ pos.df<-data.frame(t(c(portfolio$owned,portfolio$owned, 0, portfolio$m)))
 pos.names<-mapply(function(x){paste0(x,"_pos", collapse = "")}, portfolio$name)
 names(pos.df)<-c(portfolio$name,pos.names, "net_value", "cash")
 
-write.csv(pos.df, file = "pos_hist.csv")
+write.csv(pos.df, file = "pos_hist.csv",row.names = FALSE)
 
-plot(main= "positions")
-legend(0,0.5)
+#plot(main= "positions")
+#legend(0,0.5)
 
 for (ii in 5:nrow(stox.df)) {
   
@@ -69,14 +69,21 @@ for (ii in 5:nrow(stox.df)) {
   
   net.value <- portfolio.new$owned*prices.curr
   net.value.total <- sum(net.value)
+  writeLines(paste("Portfolio Value: ", as.character(round(net.value.total,2))))
+  writeLines(paste("Cash: ", as.character(round(portfolio.new$m,2))))
   
-  
-  writeLines(as.character(net.value))
-  print(portfolio.new$owned)
+  writeLines("Shares : ")
+  tmp<-rbind(prices.curr,
+             portfolio.new$owned, 
+             net.value, 
+             portfolio.new$owned*prices.curr/(net.value.total+portfolio.new$m))
+  colnames(tmp)<-portfolio.new$name
+  rownames(tmp)<-c("Price","#Shares", "Net Holding", "Weight")
+  print(round(tmp,2))
   
   
   pos.df <- rbind(pos.df, as.numeric(t(c(portfolio.new$owned, net.value, net.value.total,portfolio.new$m))))
-  write.csv(pos.df, file = "pos_hist.csv")
+  write.csv(pos.df, file = "pos_hist.csv", row.names = FALSE)
   
   portfolio <- portfolio.new
 
